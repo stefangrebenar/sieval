@@ -1,4 +1,2 @@
-# sieval
-
-## Stefan Grebenar
-### Opdracht Sieval
+# Stefan Grebenar
+## Opdracht Sieval
