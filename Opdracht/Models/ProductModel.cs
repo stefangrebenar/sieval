@@ -4,7 +4,8 @@ namespace Opdracht.Models
 {
     public class ProductModel
     {
-        public int ProductId { get; set; } 
+        
+        public int Id { get; set; } 
         public string Sku { get; set; } 
 
         [DisplayName("Artikel Naam")]

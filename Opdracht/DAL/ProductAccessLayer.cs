@@ -5,12 +5,12 @@ namespace Opdracht.DAL
 {
     public class ProductAccessLayer
     {
-        private const string ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Products; Integrated Security=true;";
+        private const string ConnectionString = @"Data Source=localhost;Initial Catalog=Products;Trusted_Connection=True;Database=SievalArtikelDb";
 
         public List<ProductModel> GetProductList()
         {
             var productList = new List<ProductModel>();
-            string sqlQuery = "SELECT ProductId, Sku, ProductName, Price FROM Product";
+            string sqlQuery = "SELECT ProductId, Sku, ProductName, Price FROM Products";
 
             using (SqlConnection sqlCon = new SqlConnection(ConnectionString))
             {
@@ -21,7 +21,7 @@ namespace Opdracht.DAL
                 while (rdr.Read())
                 {
                     var productModel = new ProductModel();
-                    productModel.ProductId = Convert.ToInt32(rdr["ProductId"]);
+                    productModel.Id = Convert.ToInt32(rdr["ProductId"]);
                     productModel.Sku = rdr["Sku"].ToString();
                     productModel.ProductName = rdr["ProductName"].ToString();
                     productModel.Price = Convert.ToDecimal(rdr["Price"]);
@@ -38,7 +38,7 @@ namespace Opdracht.DAL
         public ProductModel GetProduct(int id)
         {
             var productModel = new ProductModel();
-            string sqlQuery = "SELECT ProductId, Sku, ProductName, Price FROM Product WHERE ProductId = " + id;
+            string sqlQuery = "SELECT ProductId, Sku, ProductName, Price FROM Products WHERE ProductId = " + id;
 
             using (SqlConnection sqlCon = new SqlConnection(ConnectionString))
             {
@@ -48,7 +48,7 @@ namespace Opdracht.DAL
 
                 while (rdr.Read())
                 {
-                    productModel.ProductId = Convert.ToInt32(rdr["ProductId"]);
+                    productModel.Id = Convert.ToInt32(rdr["ProductId"]);
                     productModel.Sku = rdr["Sku"].ToString();
                     productModel.ProductName = rdr["ProductName"].ToString();
                     productModel.Price = Convert.ToDecimal(rdr["Price"]);
@@ -63,7 +63,7 @@ namespace Opdracht.DAL
 
         public bool AddProduct(ProductModel productModel)
         {
-            string sqlQuery = "INSERT INTO Product VALUES(@Sku, @ProductName, @Price)";
+            string sqlQuery = "INSERT INTO Products VALUES(@Sku, @ProductName, @Price)";
             int result;
             using (SqlConnection sqlCon = new SqlConnection(ConnectionString))
             {
@@ -82,7 +82,7 @@ namespace Opdracht.DAL
 
         public bool UpdateProduct(ProductModel productModel)
         {
-            string sqlQuery = "UPDATE Product SET Sku = @Sku, ProductName = @ProductName, Price = @Price WHERE ProductId = @ProductId";
+            string sqlQuery = "UPDATE Products SET Sku = @Sku, ProductName = @ProductName, Price = @Price WHERE ProductId = @ProductId";
             int result;
             using (SqlConnection sqlCon = new SqlConnection(ConnectionString))
             {
@@ -101,7 +101,7 @@ namespace Opdracht.DAL
 
         public bool DeleteProduct(int id)
         {
-            string sqlQuery = "DELETE FROM Product WHERE ProductId = " + id;
+            string sqlQuery = "DELETE FROM Products WHERE ProductId = " + id;
             int result;
 
             using (SqlConnection sqlCon = new SqlConnection(ConnectionString))

@@ -1,4 +1,10 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Opdracht.Data;
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<OpdrachtContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("OpdrachtContext")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
