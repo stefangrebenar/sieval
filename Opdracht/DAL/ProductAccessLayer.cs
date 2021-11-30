@@ -82,7 +82,7 @@ namespace Opdracht.DAL
 
         public bool UpdateProduct(ProductModel productModel)
         {
-            string sqlQuery = "UPDATE Products SET Sku = @Sku, ProductName = @ProductName, Price = @Price WHERE ProductId = @ProductId";
+            string sqlQuery = "UPDATE Products SET Sku = @Sku, ProductName = @ProductName, Price = @Price WHERE ProductId = @Id";
             int result;
             using (SqlConnection sqlCon = new SqlConnection(ConnectionString))
             {
@@ -90,6 +90,7 @@ namespace Opdracht.DAL
                 sqlCmd.Parameters.AddWithValue("@Sku", productModel.Sku);
                 sqlCmd.Parameters.AddWithValue("@ProductName", productModel.ProductName);
                 sqlCmd.Parameters.AddWithValue("@Price", productModel.Price);
+                sqlCmd.Parameters.AddWithValue("@Id", productModel.Id);
 
                 sqlCon.Open();
                 result = sqlCmd.ExecuteNonQuery();

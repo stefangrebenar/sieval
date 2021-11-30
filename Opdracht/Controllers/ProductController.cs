@@ -25,26 +25,14 @@ namespace Opdracht.Controllers
         public async Task<IActionResult> Index()
         {
             var products = pal.GetProductList();
-            //return View(await _context.ProductModel.ToListAsync());
             return View(products);
         }
 
         // GET: Product/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var productModel = await _context.ProductModel
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (productModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(productModel);
+            var products = pal.GetProduct(id);
+            return View(products);
         }
 
         // GET: Product/Create
@@ -62,30 +50,22 @@ namespace Opdracht.Controllers
         {
             if(productModel.ProductName == null)
             {
-                productModel.ProductName = String.Empty;
+                productModel.ProductName = string.Empty;
             }
             else if (productModel.Sku == null)
             {
-                productModel.Sku = String.Empty;
+                productModel.Sku = string.Empty;
             }
             pal.AddProduct(productModel);
             return RedirectToAction("Index");
         }
 
         // GET: Product/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var productModel = await _context.ProductModel.FindAsync(id);
-            if (productModel == null)
-            {
-                return NotFound();
-            }
+            ProductModel productModel = pal.GetProduct(id);
             return View(productModel);
+
         }
 
         // POST: Product/Edit/5
@@ -95,49 +75,22 @@ namespace Opdracht.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Sku,ProductName,Price")] ProductModel productModel)
         {
-            if (id != productModel.Id)
+            if (productModel.ProductName == null)
             {
-                return NotFound();
+                productModel.ProductName = string.Empty;
             }
-
-            if (ModelState.IsValid)
+            else if (productModel.Sku == null)
             {
-                try
-                {
-                    _context.Update(productModel);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductModelExists(productModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                productModel.Sku = string.Empty;
             }
-            return View(productModel);
+            pal.UpdateProduct(productModel);
+            return RedirectToAction("Index");
         }
 
         // GET: Product/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var productModel = await _context.ProductModel
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (productModel == null)
-            {
-                return NotFound();
-            }
-
+            ProductModel productModel = pal.GetProduct(id);
             return View(productModel);
         }
 
@@ -146,15 +99,9 @@ namespace Opdracht.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var productModel = await _context.ProductModel.FindAsync(id);
-            _context.ProductModel.Remove(productModel);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            pal.DeleteProduct(id);
+            return RedirectToAction("Index");
         }
 
-        private bool ProductModelExists(int id)
-        {
-            return _context.ProductModel.Any(e => e.Id == id);
-        }
     }
 }
